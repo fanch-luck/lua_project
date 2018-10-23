@@ -15,9 +15,9 @@ function test_addnum(data)
 		if not string.find(s, ",") then
 		    print(s)
 		else
-			line2t = split(data[i], ",")
+			line2t = split(s[1], ",")
 			--2,100/400,500for i=1, #line2t do print(line2t[i]) end
-			inputs = split(line2t[2], "/")
+			inputs = split(s[2], "/")
 		    --for i=1, #inputs do print(inputs[i]) end
 	        in1 = inputs[1]
 	        in2 = inputs[2]
