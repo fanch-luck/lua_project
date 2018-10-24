@@ -26,6 +26,10 @@ function subnum(input1, input2)
     return tonumber(input1) - tonumber(input2)
 end
 
+function getnowtime()
+    local time=os.date("%Y-%m-%d %H:%M:%S")
+    return time
+end
 
 function split(szFullString, szSeparator)    --实现字符串分割并存入table变量
     local nFindStartIndex = 1  
@@ -87,27 +91,33 @@ end
 --local func = _FUNCS
 --readtxt = func.readtxt
 --split = func.split
-data = readtxt('data.txt')  --读取整个用例文件为字符串
+data = readtxt("E:\\MyWorkPlace\\lua_project\\HMIProject_luatest-xush\\Script\\data.txt")  --读取整个用例文件为字符串
 datalines = split(data, "\n")  --获取所有数据行
---print("测试用例")
---printtable(datalines)
+--print("==================== test cases ====================")
+printtable(datalines)
 local testfunc = nil  --测试时将此变量偏移为测试函数名
 local testfuncname = nil
 local testfuncparamnum = 0  --测试函数参数个数，0表示参数个数为0
 local testfuncreturnvaluenum = 0  --测试函数返回值个数，0表示无返回值
 local test_func_real_return = nil
 local test_func_params = nil
+print("==================== test results ====================")
 for i, v in ipairs(datalines) do
+    local result_info = nil
     local line = v  --当前数据行
     if not string.find(line, ",")  --打印文件头部
     then  
-        print(line)
+        --print(line)
+        qq=nil  --不执行任何
+    elseif string.find(line, "end")  --获取函数名
+    then
+        result_info = line
     elseif string.find(line, "start")  --获取函数名
     then 
         testfuncname = split(line, ",")[2]
         testfuncparamnum = tostring(split(line, ",")[3])
         testfuncreturnvaluenum = tostring(split(line, ",")[4])
-        print('start,'..testfuncname)
+        result_info = 'start,'..testfuncname
     else  --执行函数
         line2t = split(line, ',')
         id = line2t[1]
@@ -131,8 +141,11 @@ for i, v in ipairs(datalines) do
             result = "False"
         end
         --打印和写入测试结果
-        print(id..','..test_func_str..','..tostring(test_func_desired_return)..','..tostring(test_func_real_return)..','..result)
+        result_info = id..','..test_func_str..','..tostring(test_func_desired_return)..','..tostring(test_func_real_return)..','..result
     end 
+    if result_info ~= nil then
+        print(result_info)
+    end
 end
 
 function start_test()
@@ -140,7 +153,7 @@ function start_test()
     --print("file existed? "..tostring(we_bas_file_exist(datapath)))
 	--print(_FUNCS.addnum(5,6)) --practice.lua
     --print(we_u8ta(_FUNCS.readtxt(datapath)))  --practice.lua
-    print(_FUNCS.writetxt(resultpath, '123cdf', we_u8ta("你好")))
+    --print(_FUNCS.writetxt(resultpath, '123cdf', we_u8ta("你好")))
 	--print(_FUNCS.addnum(5,7))  --functions.lua
     --print(test_addnum({5,8}))  --test_functions.lua
     print("==============================test ends==============================".."\n")
