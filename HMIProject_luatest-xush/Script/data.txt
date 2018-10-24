@@ -1,16 +1,19 @@
-注意输入参数中勿出现半角逗号和左斜杠
-start 函数名 传入参数个数 正确时返回值个数
-用例编号 输入值 预期结果
+==================== test report ====================
+start function_name parameter_number return_value_numbers
+case_id function_input desired_function_ouput
+==================== test cases ====================
 start,addnum,2,1
 1,0/65535,65535
 2,100/400,500
 3,a/1,nil
 4,76/100,176
-end
+end,addnum
 start,subnum,2,1
 1,100/50,50
 2,65535/1,65534
 3,a/1,nil
 4,0/65535,-65535
-end
-
+end,subnum
+start,getnowtime,0,1
+1,,2018-10-24 11:33:20
+end,getnowtime
