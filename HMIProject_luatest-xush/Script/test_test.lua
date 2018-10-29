@@ -1,14 +1,5 @@
 test_test_limits = 00
 
-function print2(...)
-    --重写print函数，希望用we_atu8和we_u8ta函数处理中文（未实现）
-    local result = ""
-    for i, v in ipairs{...} do
-        result = result..tostring(v).."\t"
-    end
-    result = result.."\n"
-    print(result)
-end
 
 function printtable(tablename)
     for i,v in ipairs(tablename) do
@@ -22,7 +13,7 @@ function addnum(input1, input2)
 end
 
 function subnum(input1, input2)
-    --将两数字相加，4则运算后的结果都是浮点数
+    --将两数字相减，4则运算后的结果都是浮点数
     return tonumber(input1) - tonumber(input2)
 end
 
@@ -95,10 +86,9 @@ data = readtxt("E:\\MyWorkPlace\\lua_project\\HMIProject_luatest-xush\\Script\\d
 datalines = split(data, "\n")  --获取所有数据行
 --print("==================== test cases ====================")
 printtable(datalines)
-local testfunc = nil  --测试时将此变量偏移为测试函数名
-local testfuncname = nil
-local testfuncparamnum = 0  --测试函数参数个数，0表示参数个数为0
-local testfuncreturnvaluenum = 0  --测试函数返回值个数，0表示无返回值
+local test_func_name = nil
+local test_func_param_num = 0  --测试函数参数个数，0表示参数个数为0
+local test_func_return_value_num = 0  --测试函数返回值个数，0表示无返回值
 local test_func_real_return = nil
 local test_func_params = nil
 print("==================== test results ====================")
@@ -107,27 +97,26 @@ for i, v in ipairs(datalines) do
     local line = v  --当前数据行
     if not string.find(line, ",")  --打印文件头部
     then  
-        --print(line)
-        qq=nil  --不执行任何
+        qq =  nil
     elseif string.find(line, "end")  --获取函数名
     then
         result_info = line
     elseif string.find(line, "start")  --获取函数名
     then 
-        testfuncname = split(line, ",")[2]
-        testfuncparamnum = tostring(split(line, ",")[3])
-        testfuncreturnvaluenum = tostring(split(line, ",")[4])
-        result_info = 'start,'..testfuncname
+        test_func_name = split(line, ",")[2]
+        test_func_param_num = tostring(split(line, ",")[3])
+        test_func_return_value_num = tostring(split(line, ",")[4])
+        result_info = 'start,'..test_func_name
     else  --执行函数
         line2t = split(line, ',')
         id = line2t[1]
         line_params = line2t[2]
         test_func_desired_return = line2t[3]
-        if testfuncparamnum == 0 then  --无参数
-            test_func_str = 'return '..testfuncname..'()' --函数名字符串导入(待执行执行)
+        if test_func_param_num == 0 then  --无参数
+            test_func_str = 'return '..test_func_name..'()' --函数名字符串导入(待执行执行)
         else  --有参数
-            paramstr = string.gsub(line_params, "/", ",")
-            test_func_str = 'return '..testfuncname.."("..paramstr..")"  --组装待调用函数字符串
+            paramstr = string.gsub(line_params, "/", ",")  --将参数串中斜杠/替换为逗号,
+            test_func_str = 'return '..test_func_name.."("..paramstr..")"  --组装待调用函数字符串
         end
         test_func = load(test_func_str)  --装载待调用函数字符串
         if pcall(test_func) then  --用调试方式进行函数调用，代码出错时不退出
